@@ -49,9 +49,8 @@ func run() {
 }
 
 func child() {
-	// Set upo the root fs and swap dir this will remove the mounts etc
+	// Set up the root fs and swap dir this will remove the mounts etc
 	rootfs := "/home/kpopstoyanov/simple_container/9005/mnt"
-
 
 	err := syscall.Chroot(rootfs)
 	if err != nil {
@@ -59,8 +58,7 @@ func child() {
 		fmt.Fprintf(os.Stderr, err.Error())
 		os.Exit(1)
 	}
-
-	fmt.Println("Chroot mounted ")
+	fmt.Println("Chroot done ")
 
 	// Mount proc
 	err = syscall.Mount("proc", "/proc", "proc", 0, "")
@@ -68,25 +66,21 @@ func child() {
 		fmt.Fprintf(os.Stderr, err.Error())
 		os.Exit(1)
 	}
-
 	fmt.Println("proc mounted ")
 
 	chdir := "/home/plugins"
-
 	err = syscall.Chdir(chdir)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, err.Error())
 		os.Exit(1)
 	}
-
-	fmt.Println("chdir done mounted ")
+	fmt.Println("chdir done ")
 
 
 	cmd := exec.Command("/bin/sh", "-l")
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
-
 	cmd.SysProcAttr = &syscall.SysProcAttr{
 		Credential: &syscall.Credential{
 			Uid: uint32(0),
